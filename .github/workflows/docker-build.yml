@@ -24,4 +24,6 @@ jobs:
       with:
         context: .
         push: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/gh-codex-agent:latest
+        tags: |
+          ghcr.io/coding-with-nox/gh-codex-agent:latest
+          ghcr.io/coding-with-nox/gh-codex-agent:${{ github.sha }}
