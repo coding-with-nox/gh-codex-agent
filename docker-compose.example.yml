@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  llm:
+    image: ai/qwen3-coder
+    container_name: qwen3-coder
+    ports:
+      - "8000:8000"
+    environment:
+      - MODEL_NAME=qwen3-coder
+    # NOTE: customize volumes or GPU runtime flags as needed for your host
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gh-codex-agent
+    env_file:
+      - .env
+    environment:
+      - LLM_BASE_URL=http://llm:8000/v1
+      - LLM_MODEL=qwen3-coder
+    volumes:
+      - ./src:/app/src
+    ports:
+      - "3000:3000"
+    command: ["bun", "run", "src/main.ts"]
+    depends_on:
+      - llm
